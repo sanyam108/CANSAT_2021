@@ -13,7 +13,7 @@ float rpmX,rpmY,rpmZ;
 
 void setup() {
   Serial.begin(9600);
-  bmp280_setup();
+  setupbmp();
   setupMPU();
 }
 

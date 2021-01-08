@@ -3,7 +3,7 @@ void bmploop(){
   get_altitude();
   float pressure = read_pressure();
 }
-void bmp280_setup(){
+void setupbmp(){
   Serial.println(F("BMP280 setup"));
 
   if (!bmp.begin(0x76)) {
