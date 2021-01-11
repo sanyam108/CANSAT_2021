@@ -1,32 +1,40 @@
-void bmploop(){
-  get_temp();
-  get_altitude();
-  float pressure = read_pressure();
-}
 void setupbmp(){
-  Serial.println(F("BMP280 setup"));
+  float alt,gnd_alt;
 
-  if (!bmp.begin(0x76)) {
-    Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
-  }
-
+  bmp.begin(0x76); // Default initialisation with I2C address (0x76) 
+  
   bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                   Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+  gnd_alt = bmp.readAltitude(1013.25);
+  Serial.print("Ground altitude is: ");
+  Serial.println(gnd_alt);
 }
 
-float get_temp(){
-  Serial.print(F("Temperature = ")); Serial.print(bmp.readTemperature(),1); Serial.println(" *C");
-  return bmp.readTemperature();
+void bmploop(){
+  get_temp();
+  get_altitude();
+  read_pressure();
+  altitude = alt - gnd_alt;
 }
 
-float read_pressure(){
-  return bmp.readPressure();
+void get_temp(){
+  temp = bmp.readTemperature();
+  Serial.print(F("Temperature = ")); 
+  Serial.print(temp,1); 
+  Serial.println(" *C");
 }
 
-float get_altitude(){
-  Serial.print(F("Approx altitude = ")); Serial.print(bmp.readAltitude(1013.25),1); Serial.println(" m");
-  return bmp.readAltitude(1013.25); 
+void read_pressure(){
+  pressure = bmp.readPressure();
+}
+
+void get_altitude(){
+  alt = bmp.readAltitude(1013.25);
+  Serial.print(F("Approx altitude = ")); 
+  Serial.print(bmp.readAltitude(1013.25),1); 
+  Serial.println(" m");
 }
